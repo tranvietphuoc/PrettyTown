@@ -1,3 +1,5 @@
+# -*-coding: utf-8 -*-
+
 import re
 import unicodedata
 import gspread
@@ -17,10 +19,15 @@ hometown = "Yên Thủy|Yên Thế|Yên Thành|Yên Sơn|Yên Phong|Yên Mỹ|Y�
 
 town_pattern = hometown.replace(' ', '[ ]')  # make a pattern string
 
-pattern = unicodedata.normalize('NFKD', town_pattern).encode(
+pattern1 = unicodedata.normalize('NFKD', town_pattern).encode(
     'utf-8')  # convert unicode string to raw
+
+pattern2 = unicodedata.normalize('NFKD', town_pattern).encode('ascii', 'ignore')
+# print(pattern2)
+pattern = pattern1 + pattern2
+print(pattern)
 # print(pattern)
-reg = re.compile(pattern.decode('utf-8'), re.UNICODE|re.IGNORECASE)
+reg = re.compile(pattern.decode('utf-8'), re.IGNORECASE)
 # print(reg.search(unicodedata.normalize('NFKD', addr)).group())
 
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
