@@ -22,12 +22,13 @@ town_pattern = hometown.replace(' ', '[ ]')  # make a pattern string
 pattern1 = unicodedata.normalize('NFKD', town_pattern).encode(
     'utf-8')  # convert unicode string to raw
 
-pattern2 = unicodedata.normalize('NFKD', town_pattern).encode('ascii', 'ignore')
+pattern2 = unicodedata.normalize('NFKD', town_pattern).encode('ascii', 'ignore') # convert to ascii string
 # print(pattern2)
-pattern = pattern1 + pattern2
-print(pattern)
+# pattern = pattern1 + pattern2
 # print(pattern)
-reg = re.compile(pattern.decode('utf-8'), re.IGNORECASE)
+# print(pattern)
+reg1 = re.compile(pattern1.decode('utf-8'), re.IGNORECASE)
+reg2 = re.compile(pattern2.decode('ascii'), re.IGNORECASE)
 # print(reg.search(unicodedata.normalize('NFKD', addr)).group())
 
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -46,14 +47,17 @@ def home():
 @app.route('/gettown', methods=['GET', 'POST'])
 def gettown():
     if request.method == 'POST':
-        message = "Success!"
+        message = f'Success!'
         try:
             wks = gc.open('Test').sheet1
             address = wks.col_values(1)  # get address from the first column
             town = wks.col_values(1)
             for i in range(1, len(address)+1):
-                wks.update_cell(i+1, 2, reg.search(unicodedata.normalize('NFKD', address[i])).group())
-            
+                if all(ord(char) < 128 for char in address[i]):
+                    wks.update_cell(i+1, 2, reg2.search(unicodedata.normalize('NFKD', address[i])).group())
+                else:
+                    wks.update_cell(i+1, 2, reg1.search(unicodedata.normalize('NFKD', address[i])).group())
+        
         except AttributeError as error:
             message = f'There is an error occured! {error} The address is invalid at line {i+1} of Sheets!'
         except IndexError as error:
