@@ -23,8 +23,7 @@ pattern = unicodedata.normalize('NFKD', town_pattern).encode(
 reg = re.compile(pattern.decode('utf-8'), re.LOCALE|re.IGNORECASE)
 # print(reg.search(unicodedata.normalize('NFKD', addr)).group())
 
-scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('./pretty/prettyTown-fa1b06e865ad.json', scope)
 gc = gspread.authorize(credentials)
 
