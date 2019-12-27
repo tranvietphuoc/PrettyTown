@@ -20,7 +20,7 @@ town_pattern = hometown.replace(' ', '[ ]')  # make a pattern string
 pattern = unicodedata.normalize('NFKD', town_pattern).encode(
     'utf-8')  # convert unicode string to raw
 # print(pattern)
-reg = re.compile(pattern.decode('utf-8'), re.LOCALE | re.IGNORECASE)
+reg = re.compile(pattern.decode('utf-8'), re.LOCALE|re.IGNORECASE)
 # print(reg.search(unicodedata.normalize('NFKD', addr)).group())
 
 scope = ['https://spreadsheets.google.com/feeds',
