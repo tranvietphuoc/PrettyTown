@@ -1,0 +1,1 @@
+web: gunicorn -b pretty:app --preload

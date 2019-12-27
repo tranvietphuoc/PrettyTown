@@ -3,7 +3,6 @@ import unicodedata
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from flask import Flask, render_template, redirect, get_flashed_messages, url_for, request, flash
-
 '''
 Get town from a address string from gg sheets and write them to gg sheets
 
@@ -25,11 +24,11 @@ reg = re.compile(pattern.decode('utf-8'), re.I)
 
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name(
-    './prettyTown-fa1b06e865ad.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('./pretty/prettyTown-fa1b06e865ad.json', scope)
 gc = gspread.authorize(credentials)
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'dev'
 
 
 @app.route('/')
@@ -40,11 +39,22 @@ def home():
 @app.route('/gettown', methods=['GET', 'POST'])
 def gettown():
     if request.method == 'POST':
-        wks = gc.open('Test').sheet1
-        address = wks.col_values(1)  # get address from the first column
-        town = wks.col_values(1)
-        for i in range(1, len(address)+1):
-            wks.update_cell(i+1, 2, reg.search(unicodedata.normalize('NFKD', address[i])).group())
+        message = "Success!"
+        try:
+            wks = gc.open('Test').sheet1
+            address = wks.col_values(1)  # get address from the first column
+            town = wks.col_values(1)
+            for i in range(1, len(address)+1):
+                wks.update_cell(i+1, 2, reg.search(unicodedata.normalize('NFKD', address[i])).group())
+            
+        except AttributeError as error:
+            message = f'There is an error occured! {error} The address is invalid at line {i+1} of Sheets!'
+        except IndexError as error:
+            message = f'OK, complete!'
         
+        flash(message)
         return render_template('success.html')
-    flash("We got an error!")
+
+if __name__ == '__main__':
+    app.run(debug=True)
+

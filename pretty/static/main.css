@@ -3,15 +3,16 @@
     background-color: beige;
 }
 
-h1 {
-    font-size: x-large;
-    text-align: center;
-}
-
 a::hover {
     color: aqua;
 }
 
 p > .error {
+    font-size: x-large;
     background-color: red;
+}
+form {
+    width: 500px;
+    height: 500px;
+    text-align: center;
 }
