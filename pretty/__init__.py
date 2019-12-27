@@ -33,10 +33,10 @@ reg2 = re.compile(pattern2.decode('ascii'), re.IGNORECASE)
 
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('./pretty/prettyTown-fa1b06e865ad.json', scope)
-gc = gspread.authorize(credentials)
+gc = gspread.authorize(credentials)  # create a gspread authorize
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'dev'
+app.config['SECRET_KEY'] = 'dev'  # set secret key
 
 
 @app.route('/')
@@ -53,6 +53,7 @@ def gettown():
             address = wks.col_values(1)  # get address from the first column
             town = wks.col_values(1)
             for i in range(1, len(address)+1):
+                # check if a ascii string or UTF-8 string
                 if all(ord(char) < 128 for char in address[i]):
                     wks.update_cell(i+1, 2, reg2.search(unicodedata.normalize('NFKD', address[i])).group())
                 else:
