@@ -1,1 +1,1 @@
-web: gunicorn -b pretty:app --preload
+web: gunicorn -b :$PORT pretty:app --preload
