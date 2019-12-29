@@ -22,7 +22,8 @@ town_pattern = hometown.replace(' ', '[ ]')  # make a pattern string
 pattern1 = unicodedata.normalize('NFKD', town_pattern).encode(
     'utf-8')  # convert unicode string to raw
 
-pattern2 = unicodedata.normalize('NFKD', town_pattern).encode('ascii', 'ignore') # convert to ascii string
+pattern2 = unicodedata.normalize('NFKD', town_pattern).encode(
+    'ascii', 'ignore')  # convert to ascii string
 # print(pattern2)
 # pattern = pattern1 + pattern2
 # print(pattern)
@@ -31,8 +32,10 @@ reg1 = re.compile(pattern1.decode('utf-8'), re.IGNORECASE)
 reg2 = re.compile(pattern2.decode('ascii'), re.IGNORECASE)
 # print(reg.search(unicodedata.normalize('NFKD', addr)).group())
 
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('./pretty/prettyTown-fa1b06e865ad.json', scope)
+scope = ['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    './pretty/prettyTown-fa1b06e865ad.json', scope)
 gc = gspread.authorize(credentials)  # create a gspread authorize
 
 app = Flask(__name__)
@@ -55,19 +58,21 @@ def gettown():
             for i in range(1, len(address)+1):
                 # check if a ascii string or UTF-8 string
                 if all(ord(char) < 128 for char in address[i]):
-                    wks.update_cell(i+1, 2, reg2.search(unicodedata.normalize('NFKD', address[i])).group())
+                    wks.update_cell(
+                        i+1, 2, reg2.search(unicodedata.normalize('NFKD', address[i])).group())
                 else:
-                    wks.update_cell(i+1, 2, reg1.search(unicodedata.normalize('NFKD', address[i])).group())
-        
+                    wks.update_cell(
+                        i+1, 2, reg1.search(unicodedata.normalize('NFKD', address[i])).group())
+
         except AttributeError as error:
             message = f'There is an error occured! {error} The address is invalid at line {i+1} of Sheets!'
         except IndexError as error:
             message = f'OK, complete!'
-        
+
         flash(message)
         return render_template('success.html')
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
-
