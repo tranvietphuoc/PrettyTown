@@ -1,9 +1,11 @@
 {% extends "index.html" %}
 {% block title %}Success!{% endblock %}
 {% block content %}
-    {% with message = get_flashed_messages() %}
-        {% if message %}
-            <p class="error">{{ message }}</p>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p class="error">{{ message }}</p>
+            {% endfor %}
         {% endif %}
         <p>Check the result at: <a href="https://docs.google.com/spreadsheets/d/1aioIaoecO-Kib80c_BIX9-9zz_o4zU33Sd9uqfkK7zw/edit#gid=0">Google sheets</a></p>
         <a href="{{ url_for('home') }}">Return to homepage</a>
