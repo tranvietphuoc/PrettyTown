@@ -50,7 +50,8 @@ def home():
 @app.route('/gettown', methods=['GET', 'POST'])
 def gettown():
     if request.method == 'POST':
-        messages = list(f'Success!')
+        messages = list()
+        messages.append(f'Success!')
         wks = gc.open('Test').sheet1
         address = wks.col_values(1)  # get address from the first column
         town = wks.col_values(1)
