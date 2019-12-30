@@ -50,29 +50,30 @@ def home():
 @app.route('/gettown', methods=['GET', 'POST'])
 def gettown():
     if request.method == 'POST':
-        message = f'Success!'
-        try:
-            wks = gc.open('Test').sheet1
-            address = wks.col_values(1)  # get address from the first column
-            town = wks.col_values(1)
-            for i in range(1, len(address)+1):
-                # check if a ascii string or UTF-8 string
+        messages = list(f'Success!')
+        wks = gc.open('Test').sheet1
+        address = wks.col_values(1)  # get address from the first column
+        town = wks.col_values(1)
+        for i in range(1, len(address)+1):
+            # check if a ascii string or UTF-8 string
+            try:
                 if all(ord(char) < 128 for char in address[i]):
                     wks.update_cell(
                         i+1, 2, reg2.search(unicodedata.normalize('NFKD', address[i])).group())
                 else:
                     wks.update_cell(
                         i+1, 2, reg1.search(unicodedata.normalize('NFKD', address[i])).group())
+            except AttributeError as error:
+                messages.append(f'There is an error occured! {error} The address is invalid at line {i+1} of Sheets!')
+                continue
+            except IndexError as error:
+                messages.append(f'OK, complete!')
 
-        except AttributeError as error:  # AttributeError when address didn't match any patterns
-            message = f'The address is invalid at line {i+1} of Sheets!'
-        except IndexError as error:  # IndexError when the address column of GG sheets is null
-            message = f'OK, complete!'
-
-        flash(message)
+        for message in messages:
+            flash(message)
         return render_template('success.html')
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.gePt('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
