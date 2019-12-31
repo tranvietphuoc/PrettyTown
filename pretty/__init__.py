@@ -65,7 +65,8 @@ def gettown():
                     wks.update_cell(
                         i+1, 2, reg1.search(unicodedata.normalize('NFKD', address[i])).group())
             except AttributeError as error:
-                messages.append(f'There is an error occured! {error} The address is invalid at line {i+1} of Sheets!')
+                messages.append(
+                    f'There is an error occured! {error} The address is invalid at line {i+1} of Sheets!')
                 continue
             except IndexError as error:
                 messages.append(f'OK, complete!')
