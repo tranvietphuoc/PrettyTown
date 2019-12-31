@@ -1,11 +1,11 @@
 name: Python application
 
-on: [push]
+on: push
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    name: PrettyTown Workflow
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v1
