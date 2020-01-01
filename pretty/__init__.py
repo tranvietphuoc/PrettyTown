@@ -56,8 +56,8 @@ def gettown():
         address = wks.col_values(1)  # get address from the first column
         town = wks.col_values(1)
         for i in range(1, len(address)+1):
-            # check if a ascii string or UTF-8 string
             try:
+                # check if a ascii string or UTF-8 string
                 if all(ord(char) < 128 for char in address[i]):
                     wks.update_cell(
                         i+1, 2, reg2.search(unicodedata.normalize('NFKD', address[i])).group())
@@ -65,6 +65,7 @@ def gettown():
                     wks.update_cell(
                         i+1, 2, reg1.search(unicodedata.normalize('NFKD', address[i])).group())
             except AttributeError as error:
+                # if the loop raise the AttributeError for some reasons, then continue the loop
                 messages.append(
                     f'There is an error occured! {error} The address is invalid at line {i+1} of Sheets!')
                 continue
@@ -80,12 +81,12 @@ def gettown():
 def fillAddress():
     if request.method == 'POST':
         messages = list()
-        wks = gc.open('Test').get_worksheet(1)
+        wks = gc.open('Test').get_worksheet(1)  # get worksheet (sheet2)
         origins = wks.col_values(4)
         destinations = wks.col_values(5)
-        print(origins[158])
         for i in range(1, len(destinations)):
             try:
+                # if the origin column is "", then fill origins[i] = destinations[i-1]
                 if origins[i] == "":
                     wks.update_cell(i+1, 4, destinations[i-1])
                 else:
