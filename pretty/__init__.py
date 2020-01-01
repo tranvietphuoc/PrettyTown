@@ -69,11 +69,33 @@ def gettown():
                     f'There is an error occured! {error} The address is invalid at line {i+1} of Sheets!')
                 continue
             except IndexError as error:
-                messages.append(f'OK, complete!')
+                messages.append(f'OK, completed!')
 
         for message in messages:
             flash(message)
         return render_template('success.html')
+
+
+@app.route('/fillAddress', methods=['GET', 'POST'])
+def fillAddress():
+    if request.method == 'POST':
+        messages = list()
+        wks = gc.open('Test').get_worksheet(1)
+        origins = wks.col_values(4)
+        destinations = wks.col_values(5)
+        print(origins[158])
+        for i in range(1, len(destinations)):
+            try:
+                if origins[i] == "":
+                    wks.update_cell(i+1, 4, destinations[i-1])
+                else:
+                    continue
+            except IndexError as error:
+                messages.append(f'OK, completed!')
+        
+        for message in messages:
+            flash(message)
+    return render_template('fillSuccess.html')
 
 
 if __name__ == '__main__':

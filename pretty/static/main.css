@@ -18,16 +18,16 @@ p > .error {
     font-style: oblique;
 }
 button {
-    margin: 5em;
+    margin: 2em;
     padding: 2em;
     box-shadow: 1px;
 }
 
 form {
     
-    width: 900px;
-    height: 300px;
+    width: 100px;
+    height: 100px;
     text-align: center;
-    padding: 5em;
+    padding: 1em;
     margin: 1em;
 }
