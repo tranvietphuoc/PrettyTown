@@ -35,7 +35,7 @@ reg2 = re.compile(pattern2.decode('ascii'), re.IGNORECASE)
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_name(
-    './pretty/prettyTown-fa1b06e865ad.json', scope)
+    './prettyTown-fa1b06e865ad.json', scope)
 gc = gspread.authorize(credentials)  # create a gspread authorize
 
 app = Flask(__name__)
