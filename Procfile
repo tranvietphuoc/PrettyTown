@@ -1,1 +1,1 @@
-web: gunicorn -b :$PORT pretty:app --preload
+web: gunicorn --chdir pretty app:app
