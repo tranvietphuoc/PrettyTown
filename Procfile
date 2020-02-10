@@ -1,1 +1,1 @@
-web: gunicorn --chdir pretty app:app
+web: gunicorn --chdir pretty app:app --preload
