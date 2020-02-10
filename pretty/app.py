@@ -101,4 +101,4 @@ def fillAddress():
 
 if __name__ == '__main__':
     port = int(os.environ.gePt('PORT', 5000))
-    a
+    app.run(host='0.0.0.0', port=port, debug=True)
