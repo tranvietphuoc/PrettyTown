@@ -35,7 +35,7 @@ reg2 = re.compile(pattern2.decode('ascii'), re.IGNORECASE)
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
 credentials = ServiceAccountCredentials.from_json_keyfile_name(
-    './prettyTown-fa1b06e865ad.json', scope)
+    './pretty/prettyTown-fa1b06e865ad.json', scope)
 gc = gspread.authorize(credentials)  # create a gspread authorize
 
 app = Flask(__name__)
@@ -53,23 +53,24 @@ def gettown():
         messages = list()
         messages.append(f'Success!')
         wks = gc.open('Test').sheet1
-        address = wks.col_values(1)  # get address from the first column
-        town = wks.col_values(1)
-        for i in range(1, len(address)+1):
+        addresses = wks.col_values(1)  # get address from the first column
+        # towns = wks.col_values(1)
+        
+        for i in range(1, len(addresses)+1):
             try:
                 # check if a ascii string or UTF-8 string
-                if all(ord(char) < 128 for char in address[i]):
+                if all(ord(char) < 128 for char in addresses[i]):
                     wks.update_cell(
-                        i+1, 2, reg2.search(unicodedata.normalize('NFKD', address[i])).group())
+                        i+1, 2, reg2.search(unicodedata.normalize('NFKD', addresses[i])).group())
                 else:
                     wks.update_cell(
-                        i+1, 2, reg1.search(unicodedata.normalize('NFKD', address[i])).group())
+                        i+1, 2, reg1.search(unicodedata.normalize('NFKD', addresses[i])).group())
             except AttributeError as error:
                 # if the loop raise the AttributeError for some reasons, then continue the loop
                 messages.append(
                     f'There is an error occured! {error} The address is invalid at line {i+1} of Sheets!')
                 continue
-            except IndexError as error:
+            except IndexError:
                 messages.append(f'OK, completed!')
 
         for message in messages:
